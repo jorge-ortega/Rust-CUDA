@@ -184,8 +184,8 @@ pub(crate) fn parse_module<'a>(
             name.len(),
         )
         .ok_or_else(|| {
-            let msg = "failed to parse bitcode for LTO module";
-            crate::back::llvm_err(dcx, msg)
+            let msg = format!("failed to parse bitcode for LTO module {}", name);
+            crate::back::llvm_err(dcx, &msg)
         })
     }
 }
