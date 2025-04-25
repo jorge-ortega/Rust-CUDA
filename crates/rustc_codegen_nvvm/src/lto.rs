@@ -16,6 +16,7 @@ use tracing::{debug, trace};
 use crate::NvvmCodegenBackend;
 use crate::common::AsCCharPtr;
 use crate::{LlvmMod, llvm};
+use base64::prelude::*;
 
 pub struct ModuleBuffer(&'static mut llvm::ModuleBuffer);
 
@@ -184,7 +185,9 @@ pub(crate) fn parse_module<'a>(
             name.len(),
         )
         .ok_or_else(|| {
-            let msg = format!("failed to parse bitcode for LTO module {}", name);
+            let base64_data = BASE64_STANDARD.encode(data);
+            dcx.err(format!("module data: {}", base64_data));
+            let msg = format!("failed to parse bitcode for LTO module ({})", name);
             crate::back::llvm_err(dcx, &msg)
         })
     }

@@ -1293,6 +1293,9 @@ LLVMRustParseBitcodeForLTO(LLVMContextRef Context,
 {
   StringRef Data(data, len);
   MemoryBufferRef Buffer{Data, StringRef(identifier, idLen)};
+
+  assert(isBitcode(data, data + len) && "Expected bitcode data");
+
   unwrap(Context)->enableDebugTypeODRUniquing();
   Expected<std::unique_ptr<Module>> SrcOrError =
       parseBitcodeFile(Buffer, *unwrap(Context));
